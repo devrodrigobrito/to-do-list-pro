@@ -42,3 +42,33 @@ const importJsonBtn = document.getElementById('import-json-btn');
 const exportJsonBtn = document.getElementById('export-json-btn');
 
 
+// =========================================================================
+// MODAL CONTROL FUNCTIONS
+// =========================================================================
+
+// Function to open modal (show on screen)
+const openModal = () => {
+    modalTitle.textContent = 'Adicionar Nova Tarefa';
+    taskmodal.classList.remove('hidden');
+    taskform.reset();
+};
+
+// Function to close the modal (hide from screen)
+const closeModal = () => {
+    taskmodal.classList.add('hidden');
+};
+
+// Event listeners modal
+addtaskbtn.addEventListener('click', openModal);
+cancelmodalbtn.addEventListener('click', closeModal);
+
+// Closes the modal by clicking outside of it (on the dark background)
+taskmodal.addEventListener('click', (e) => {
+    if(e.target === taskmodal){
+        closeModal();
+    };
+});
+
+
+
+
