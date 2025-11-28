@@ -97,6 +97,34 @@ const createTask = () => {
 };
 
 
+const renderTask = (task) => {
+    const listItem = document.createElement('li');
+
+    listItem.innerHTML = ` <div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
+                <input type="checkbox" class="h-5 w-5">
+
+                <div class="flex-1 ml-4">
+                    <p class="font-semibold text-gray-800">${task.title}</p>
+                    <p class="text-gray-600 text-sm mt-1">${task.description}</p>
+
+                    <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                        <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs">${task.priority}</span>
+                        <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs">${task.category}</span>
+                        <span>📅 ${task.dueDate}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button data-action="edit" data-task-id="${task.id}" class="p-2 rounded hover:bg-gray-100 transition">✏️</button>
+
+                    <button data-action="delete" data-task-id="${task.id}" class="p-2 rounded hover:bg-red-100 text-red-600 transition">🗑️</button>
+                </div>
+            </div>`
+
+            taskListEl.appendChild(listItem);
+};
+
+
 
 
 
