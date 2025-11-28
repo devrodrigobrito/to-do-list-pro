@@ -70,5 +70,33 @@ taskmodal.addEventListener('click', (e) => {
 });
 
 
+// =========================================================================
+// CREATE TASK FUNCTIONS
+// =========================================================================
+
+const createTask = () => {
+    const title = titleEl.value.trim();
+    const description = descriptionEl.value.trim();
+    const priority = priorityEl.value;
+    const category = categoryEl.value;
+    const dueDate = dueDateEl.value;
+
+    const newTask = {
+        id: nextTaskId,
+        title: title,
+        description: description,
+        priority: priority,
+        category: category,
+        dueDate: dueDate,
+        completed: false
+    };
+
+    nextTaskId++;
+
+    return newTask;
+};
+
+
+
 
 
