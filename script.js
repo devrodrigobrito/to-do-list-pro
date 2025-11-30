@@ -98,9 +98,9 @@ const createTask = () => {
 
 
 const renderTask = (task) => {
-    const listItem = document.createElement('li');
+    const listItem = document.createElement('div');
 
-    listItem.innerHTML = ` <div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
+    listItem.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
                 <input type="checkbox" class="h-5 w-5">
 
                 <div class="flex-1 ml-4">
