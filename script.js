@@ -141,5 +141,17 @@ const renderTask = (task) => {
 
 
 
+const handleTaskSubmit = (event) => {
+    event.preventDefault();
+
+    const newTask = createTask();
+    renderTask(newTask);
+    taskform.reset();
+};
+
+taskform.addEventListener('submit', handleTaskSubmit);
+
+
+
 
 
