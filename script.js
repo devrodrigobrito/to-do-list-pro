@@ -77,8 +77,8 @@ taskmodal.addEventListener('click', (e) => {
 const createTask = () => {
     const title = titleEl.value.trim();
     const description = descriptionEl.value.trim();
-    const priority = priorityEl.value;
-    const category = categoryEl.value;
+    const priority = priorityEl.options[priorityEl.selectedIndex].textContent;
+    const category = categoryEl.options[categoryEl.selectedIndex].textContent;
     const dueDate = dueDateEl.value;
 
     const newTask = {
