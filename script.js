@@ -111,8 +111,27 @@ const getPriorityColor = (priority) => {
 };
 
 
+const getCategoryColor = (category) => {
+    switch(category){
+        case 'Pessoal':
+            return 'bg-indigo-100 text-indigo-600';
+        case 'Trabalho':
+            return 'bg-blue-100 text-blue-600';
+        case 'Estudo':
+            return 'bg-purple-100 text-purple-600';
+        case 'Saúde':
+            return 'bg-green-100 text-green-600';
+        case 'Finança':
+            return 'bg-emerald-100 text-emerald-600'; 
+        default:
+            return 'bg-gray-100 text-gray-600';                          
+    };
+};
+
+
 const renderTask = (task) => {
     const priorityClasses = getPriorityColor(task.priority);
+    const categoryClasses = getCategoryColor(task.category);
     const listItem = document.createElement('div');
 
     listItem.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
@@ -124,7 +143,7 @@ const renderTask = (task) => {
 
                     <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
                         <span class="${priorityClasses} px-2 py-1 rounded text-xs">${task.priority}</span>
-                        <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs">${task.category}</span>
+                        <span class="${categoryClasses} px-2 py-1 rounded text-xs">${task.category}</span>
                         <span>📅 ${task.dueDate}</span>
                     </div>
                 </div>
