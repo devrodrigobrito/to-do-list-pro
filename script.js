@@ -129,12 +129,30 @@ const getCategoryColor = (category) => {
 };
 
 
+const formatDueDate = (dateString) => {
+    const dateObject = new Date(dateString + 'T00:00:00');
+
+    const options = {
+        month: 'short',
+        day: 'numeric'
+    };
+
+       if(isNaN(dateObject)){
+        return '';
+    };
+
+    return dateObject.toLocaleDateString('pt-BR', options);
+};
+
+
 const renderTask = (task) => {
     const priorityClasses = getPriorityColor(task.priority);
     const categoryClasses = getCategoryColor(task.category);
-    const listItem = document.createElement('div');
+    const formattedDate = formatDueDate(task.dueDate);
 
-    listItem.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
+    const taskItemContainer = document.createElement('div');
+
+    taskItemContainer.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
                 <input type="checkbox" class="h-5 w-5">
 
                 <div class="flex-1 ml-4">
@@ -144,7 +162,7 @@ const renderTask = (task) => {
                     <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
                         <span class="${priorityClasses} px-2 py-1 rounded text-xs">${task.priority}</span>
                         <span class="${categoryClasses} px-2 py-1 rounded text-xs">${task.category}</span>
-                        <span>📅 ${task.dueDate}</span>
+                        ${formattedDate ? `<span>📅 ${formattedDate}</span>` : ''}
                     </div>
                 </div>
 
@@ -155,7 +173,7 @@ const renderTask = (task) => {
                 </div>
             </div>`
 
-            taskListEl.appendChild(listItem);
+            taskListEl.appendChild(taskItemContainer);
 };
 
 
