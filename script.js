@@ -167,9 +167,9 @@ const renderTask = (task) => {
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button data-action="edit" data-task-id="${task.id}" class="p-2 rounded hover:bg-gray-100 transition">✏️</button>
+                    <button data-action="edit" class="p-2 rounded hover:bg-gray-100 transition">✏️</button>
 
-                    <button data-action="delete" data-task-id="${task.id}" class="p-2 rounded hover:bg-red-100 text-red-600 transition">🗑️</button>
+                    <button data-action="delete" class="p-2 rounded hover:bg-red-100 text-red-600 transition">🗑️</button>
                 </div>
             </div>`
 
@@ -182,11 +182,31 @@ const handleTaskSubmit = (event) => {
     event.preventDefault();
 
     const newTask = createTask();
+    tasks.push(newTask);
     renderTask(newTask);
     taskform.reset();
 };
 
 taskform.addEventListener('submit', handleTaskSubmit);
+
+
+// =========================================================================
+// TASK DELETE FUNCTIONS
+// =========================================================================
+
+taskListEl.addEventListener('click', (event) => {
+    const deleteBtn = event.target.closest('[data-action="delete"]');
+    if(!deleteBtn) return;
+
+    const taskItemEl = deleteBtn.closest('[data-task-id]');
+    if(!taskItemEl) return;
+
+    const id = Number(taskItemEl.dataset.taskId);
+    tasks = tasks.filter(task => task.id !== id);
+
+    taskItemEl.remove();
+});
+
 
 
 
