@@ -5,6 +5,7 @@
 // Initial Status
 let tasks = [];
 let nextTaskId = 1;
+let currentTaskToEditId = null;
 
 //Action and Modal Elements
 const addtaskbtn = document.getElementById('add-task-btn'); 
@@ -56,6 +57,7 @@ const openModal = () => {
 // Function to close the modal (hide from screen)
 const closeModal = () => {
     taskmodal.classList.add('hidden');
+    taskform.reset();
 };
 
 // Event listeners modal
@@ -77,8 +79,8 @@ taskmodal.addEventListener('click', (e) => {
 const createTask = () => {
     const title = titleEl.value.trim();
     const description = descriptionEl.value.trim();
-    const priority = priorityEl.options[priorityEl.selectedIndex].textContent;
-    const category = categoryEl.options[categoryEl.selectedIndex].textContent;
+    const priority = priorityEl.value;
+    const category = categoryEl.value;
     const dueDate = dueDateEl.value;
 
     const newTask = {
@@ -177,21 +179,8 @@ const renderTask = (task) => {
 };
 
 
-
-const handleTaskSubmit = (event) => {
-    event.preventDefault();
-
-    const newTask = createTask();
-    tasks.push(newTask);
-    renderTask(newTask);
-    taskform.reset();
-};
-
-taskform.addEventListener('submit', handleTaskSubmit);
-
-
 // =========================================================================
-// TASK DELETE FUNCTIONS
+// TASK DELETE FUNCTION
 // =========================================================================
 
 taskListEl.addEventListener('click', (event) => {
@@ -206,6 +195,70 @@ taskListEl.addEventListener('click', (event) => {
 
     taskItemEl.remove();
 });
+
+
+// =========================================================================
+// EDIT TASK FUNCTION 
+// =========================================================================
+
+taskListEl.addEventListener('click', (event) => {
+    const editBtn = event.target.closest('[data-action="edit"]');
+    if(!editBtn) return;
+
+    const taskEl = editBtn.closest('[data-task-id]');
+    if(!taskEl) return;
+
+    const id = Number(taskEl.dataset.taskId);
+    const taskToEdit = tasks.find(task => task.id === id);
+    if(!taskToEdit) return;
+
+    titleEl.value = taskToEdit.title;
+    descriptionEl.value = taskToEdit.description;
+    priorityEl.value = taskToEdit.priority;
+    categoryEl.value = taskToEdit.category;
+    dueDateEl.value = taskToEdit.dueDate;
+
+    currentTaskToEditId = id;
+    
+    taskmodal.classList.remove('hidden');
+    modalTitle.textContent = 'Editar Tarefa';
+});
+
+
+taskform.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if(currentTaskToEditId !== null){
+       const taskToEdit = tasks.find(task => task.id === currentTaskToEditId);
+        if (!taskToEdit) return;
+
+        Object.assign(taskToEdit, {
+        title: titleEl.value.trim(),
+        description: descriptionEl.value.trim(),
+        priority: priorityEl.value,
+        category: categoryEl.value,
+        dueDate: dueDateEl.value
+        });
+      
+        renderTasks();
+        closeModal();
+        currentTaskToEditId = null;
+    }else {
+        const newTask = createTask();
+        tasks.push(newTask);
+        renderTask(newTask);
+        closeModal();
+    }
+});
+
+
+const renderTasks = () => {
+    taskListEl.innerHTML = '';
+
+    tasks.forEach(task => {
+        renderTask(task);
+    });
+};
 
 
 
