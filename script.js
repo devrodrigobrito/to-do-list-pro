@@ -193,6 +193,7 @@ taskListEl.addEventListener('click', (event) => {
     const id = Number(taskItemEl.dataset.taskId);
     tasks = tasks.filter(task => task.id !== id);
 
+    saveTasksToLocalStorage();
     taskItemEl.remove();
 });
 
@@ -242,12 +243,14 @@ taskform.addEventListener('submit', (event) => {
       
         renderTasks();
         closeModal();
+        saveTasksToLocalStorage();
         currentTaskToEditId = null;
     }else {
         const newTask = createTask();
         tasks.push(newTask);
         renderTask(newTask);
         closeModal();
+        saveTasksToLocalStorage();
     }
 });
 
@@ -259,6 +262,30 @@ const renderTasks = () => {
         renderTask(task);
     });
 };
+
+
+// =========================================================================
+// SAVE LOCAL STORAGE FUNCTIONS
+// =========================================================================
+
+const saveTasksToLocalStorage = () => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+};
+
+const loadTasksFromLocalStorage = () => {
+    const savedTasks = localStorage.getItem('tasks');
+
+    if(savedTasks){
+        return JSON.parse(savedTasks);
+    }
+
+    return [];
+};
+
+tasks = loadTasksFromLocalStorage();
+renderTasks();
+nextTaskId = tasks.reduce((max, task) => Math.max(max, task.id), 0) +1;
+
 
 
 
