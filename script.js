@@ -155,7 +155,7 @@ const renderTask = (task) => {
     const taskItemContainer = document.createElement('div');
 
     taskItemContainer.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
-                <input type="checkbox" class="h-5 w-5">
+                <input type="checkbox" data-action="complete" class="h-5 w-5">
 
                 <div class="flex-1 ml-4">
                     <p class="font-semibold text-gray-800">${task.title}</p>
@@ -261,6 +261,27 @@ const renderTasks = () => {
     tasks.forEach(task => {
         renderTask(task);
     });
+
+    tasks.forEach(task => {
+        if(!task.completed) return;
+
+        const taskEl = document.querySelector(`[data-task-id="${task.id}"]`);
+        if(!taskEl) return;
+
+        const checkbox = taskEl.querySelector('[data-action="complete"]');
+        if(!checkbox) return;
+
+        const titleElement = taskEl.querySelector('.font-semibold');
+        if(!titleElement) return;
+
+        if(checkbox){
+            checkbox.checked = true;
+        }
+
+        if(titleElement){
+            titleElement.classList.add('line-through', 'text-gray-400');
+        }
+    });
 };
 
 
@@ -287,6 +308,35 @@ renderTasks();
 nextTaskId = tasks.reduce((max, task) => Math.max(max, task.id), 0) +1;
 
 
+// =========================================================================
+// TOGGLE TASK COMPLETION FUNCTION
+// =========================================================================
+
+taskListEl.addEventListener('click', (event) => {
+    const checkbox = event.target.closest('[data-action="complete"]');
+    if(!checkbox) return;
+
+    const taskEl = checkbox.closest('[data-task-id]');
+    if(!taskEl) return;
+    
+    const id = Number(taskEl.dataset.taskId);
+    const taskCompleted = tasks.find(task => task.id === id);
+    if(!taskCompleted) return;
+
+    taskCompleted.completed = checkbox.checked;
+
+    const titleElement = taskEl.querySelector('.font-semibold');
+
+    if(titleElement){
+        if(taskCompleted.completed){
+            titleElement.classList.add('line-through', 'text-gray-400');
+        }else{
+            titleElement.classList.remove('line-through', 'text-gray-400');
+        }
+    }
+
+    saveTasksToLocalStorage(); 
+});
 
 
 
