@@ -194,6 +194,7 @@ taskListEl.addEventListener('click', (event) => {
     tasks = tasks.filter(task => task.id !== id);
 
     saveTasksToLocalStorage();
+    updateCounters();
     taskItemEl.remove();
 });
 
@@ -251,6 +252,7 @@ taskform.addEventListener('submit', (event) => {
         renderTask(newTask);
         closeModal();
         saveTasksToLocalStorage();
+        updateCounters();
     }
 });
 
@@ -335,8 +337,28 @@ taskListEl.addEventListener('click', (event) => {
         }
     }
 
-    saveTasksToLocalStorage(); 
+    saveTasksToLocalStorage();
+    updateCounters(); 
 });
+
+
+// =========================================================================
+// COUNTER STATUS FUNCTION
+// =========================================================================
+
+const updateCounters = () => {
+    const total = tasks.length;
+    statsTotalEl.textContent = total;
+    
+    const completas = tasks.filter(task => task.completed).length;
+    statsCompletedEl.textContent = completas;
+
+    const pendentes = total - completas;
+    statsPendingEl.textContent = pendentes;
+};
+
+updateCounters();
+
 
 
 
