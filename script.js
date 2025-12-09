@@ -267,21 +267,10 @@ const renderTasks = () => {
     tasks.forEach(task => {
         if(!task.completed) return;
 
-        const taskEl = document.querySelector(`[data-task-id="${task.id}"]`);
-        if(!taskEl) return;
-
-        const checkbox = taskEl.querySelector('[data-action="complete"]');
-        if(!checkbox) return;
-
-        const titleElement = taskEl.querySelector('.font-semibold');
-        if(!titleElement) return;
-
-        if(checkbox){
-            checkbox.checked = true;
-        }
-
-        if(titleElement){
-            titleElement.classList.add('line-through', 'text-gray-400');
+     if(task.completed){
+            const taskEl = document.querySelector(`[data-task-id="${task.id}"]`);
+            taskEl.querySelector('[data-action="complete"]').checked = true;
+            taskEl.querySelector('.font-semibold').classList.add('line-through', 'text-gray-400');
         }
     });
 };
@@ -350,16 +339,88 @@ const updateCounters = () => {
     const total = tasks.length;
     statsTotalEl.textContent = total;
     
-    const completas = tasks.filter(task => task.completed).length;
-    statsCompletedEl.textContent = completas;
+    const complete = tasks.filter(task => task.completed).length;
+    statsCompletedEl.textContent = complete;
 
-    const pendentes = total - completas;
-    statsPendingEl.textContent = pendentes;
+    const pending = total - complete;
+    statsPendingEl.textContent = pending;
 };
 
 updateCounters();
 
 
+// =========================================================================
+// FILTERING FUNCTIONS
+// =========================================================================
+
+const filterAndRenderTasks = () => {
+    let filteredTasks = [...tasks];
+
+    const searchText = searchInput.value;
+
+    if(searchText){
+        const nomalizeText = searchText.toLowerCase();
+
+      filteredTasks = filteredTasks.filter(task => {
+        return task.title.toLowerCase().includes(nomalizeText) || task.description.toLowerCase().includes(nomalizeText);
+    });
+    }
+
+    const statusFilter = filterStatus.value;
+
+    if(statusFilter !== "all"){
+        filteredTasks = filteredTasks.filter(task => {
+            if(statusFilter === "completed"){
+                return task.completed === true;
+            }else if(statusFilter === "pending"){
+                return task.completed === false;
+            }
+        });
+    }
+
+    const categoryFilter = filterCategory.value;
+
+    if(categoryFilter !== "todas"){
+        filteredTasks = filteredTasks.filter(task => {
+            return task.category === categoryFilter;
+        });
+    }
+
+    const sortValue = sortBy.value;
+
+    if(sortValue){
+        filteredTasks.sort((a,b) => {
+            switch(sortValue){
+                case 'date-desc':
+                    return b.id - a.id;
+                case 'due-asc': 
+                    return new Date(a.dueDate) - new Date(b.dueDate);
+                case 'priority-desc':
+                    const priorityWeight = { 'Alta': 3, 'Média': 2, 'Baixa': 1 };
+                    return priorityWeight[b.priority] - priorityWeight[a.priority];
+                default: 
+                    return 0;       
+            }
+        });
+    }
+
+    taskListEl.innerHTML = '';
+    filteredTasks.forEach(task => {
+        renderTask(task);
+
+        if(task.completed){
+            const taskEl = document.querySelector(`[data-task-id="${task.id}"]`);
+            taskEl.querySelector('[data-action="complete"]').checked = true;
+            taskEl.querySelector('.font-semibold').classList.add('line-through', 'text-gray-400');
+        }
+    });
+};
+
+
+searchInput.addEventListener('input', filterAndRenderTasks);
+filterStatus.addEventListener('change', filterAndRenderTasks);
+filterCategory.addEventListener('change', filterAndRenderTasks);
+sortBy.addEventListener('change', filterAndRenderTasks);
 
 
 
