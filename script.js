@@ -450,5 +450,29 @@ loadDarkModePreference();
 darkModeToggle.addEventListener('click', toggleDarkMode);
 
 
+// =========================================================================
+// JSON TASK IMPORT AND EXPORT FUNCTION
+// =========================================================================
+
+const exportTasksToJSON = () => {
+    const jsonString = JSON.stringify(tasks, null, 2);
+    const blob = new Blob([jsonString], {type: 'application/json'});
+    const link = document.createElement('a');
+
+    const objectURL = URL.createObjectURL(blob);
+    link.href = objectURL;
+    link.download = 'tarefas.json';
+    link.click();
+
+    setTimeout(() => {
+        URL.revokeObjectURL(objectURL);
+
+        link.remove();
+    }, 100);
+};
+
+exportJsonBtn.addEventListener('click', exportTasksToJSON);
+
+
 
 
