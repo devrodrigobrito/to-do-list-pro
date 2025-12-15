@@ -154,12 +154,12 @@ const renderTask = (task) => {
 
     const taskItemContainer = document.createElement('div');
 
-    taskItemContainer.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white shadow p-4 rounded-lg border">
+    taskItemContainer.innerHTML = `<div data-task-id="${task.id}" class="flex items-center justify-between bg-white dark:bg-gray-800 shadow p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                 <input type="checkbox" data-action="complete" class="h-5 w-5">
 
                 <div class="flex-1 ml-4">
-                    <p class="font-semibold text-gray-800">${task.title}</p>
-                    <p class="text-gray-600 text-sm mt-1">${task.description}</p>
+                    <p class="font-semibold text-gray-800 dark:text-gray-100">${task.title}</p>
+                    <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">${task.description}</p>
 
                     <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
                         <span class="${priorityClasses} px-2 py-1 rounded text-xs">${task.priority}</span>
@@ -421,6 +421,33 @@ searchInput.addEventListener('input', filterAndRenderTasks);
 filterStatus.addEventListener('change', filterAndRenderTasks);
 filterCategory.addEventListener('change', filterAndRenderTasks);
 sortBy.addEventListener('change', filterAndRenderTasks);
+
+
+// =========================================================================
+// DARK MODE FUNCTION
+// =========================================================================
+
+const toggleDarkMode = () => {
+    document.documentElement.classList.toggle('dark');
+
+    if(document.documentElement.classList.contains('dark')){
+        localStorage.setItem('theme', 'dark');
+    }else{
+        localStorage.setItem('theme', 'light');
+    } 
+};
+
+const loadDarkModePreference = () => {
+    const themePreference = localStorage.getItem('theme');
+
+    if(themePreference === 'dark'){
+        document.documentElement.classList.add('dark');
+    }
+};
+
+loadDarkModePreference();
+
+darkModeToggle.addEventListener('click', toggleDarkMode);
 
 
 
