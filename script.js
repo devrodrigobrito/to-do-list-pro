@@ -7,7 +7,7 @@ let tasks = [];
 let nextTaskId = 1;
 let currentTaskToEditId = null;
 
-//Action and Modal Elements
+// Action and Modal Elements
 const addtaskbtn = document.getElementById('add-task-btn'); 
 const taskmodal = document.getElementById('task-modal');
 const cancelmodalbtn = document.getElementById('cancel-modal-btn');
@@ -37,7 +37,7 @@ const filterStatus = document.getElementById('filter-status');
 const filterCategory = document.getElementById('filter-category');
 const sortBy = document.getElementById('sort-by');
 
-//Import/Export Elements
+// Import/Export Elements
 const importJsonFile = document.getElementById('import-json-file');
 const importJsonBtn = document.getElementById('import-json-btn');
 const exportJsonBtn = document.getElementById('export-json-btn');
@@ -47,14 +47,14 @@ const exportJsonBtn = document.getElementById('export-json-btn');
 // MODAL CONTROL FUNCTIONS
 // =========================================================================
 
-// Function to open modal (show on screen)
+// Open modal for adding new task
 const openModal = () => {
     modalTitle.textContent = 'Adicionar Nova Tarefa';
     taskmodal.classList.remove('hidden');
     taskform.reset();
 };
 
-// Function to close the modal (hide from screen)
+// Close modal and reset form
 const closeModal = () => {
     taskmodal.classList.add('hidden');
     taskform.reset();
@@ -64,7 +64,7 @@ const closeModal = () => {
 addtaskbtn.addEventListener('click', openModal);
 cancelmodalbtn.addEventListener('click', closeModal);
 
-// Closes the modal by clicking outside of it (on the dark background)
+// Close modal when clicking outside
 taskmodal.addEventListener('click', (e) => {
     if(e.target === taskmodal){
         closeModal();
@@ -76,6 +76,7 @@ taskmodal.addEventListener('click', (e) => {
 // CREATE TASK FUNCTIONS
 // =========================================================================
 
+// Create new task object from form inputs
 const createTask = () => {
     const title = titleEl.value.trim();
     const description = descriptionEl.value.trim();
@@ -99,6 +100,7 @@ const createTask = () => {
 };
 
 
+// Return Tailwind classes based on priority level
 const getPriorityColor = (priority) => {
     switch(priority){
         case 'Alta':
@@ -113,6 +115,7 @@ const getPriorityColor = (priority) => {
 };
 
 
+// Return Tailwind classes based on category
 const getCategoryColor = (category) => {
     switch(category){
         case 'Pessoal':
@@ -131,6 +134,7 @@ const getCategoryColor = (category) => {
 };
 
 
+// Format date to locale string
 const formatDueDate = (dateString) => {
     const dateObject = new Date(dateString + 'T00:00:00');
 
@@ -139,7 +143,7 @@ const formatDueDate = (dateString) => {
         day: 'numeric'
     };
 
-       if(isNaN(dateObject)){
+    if(isNaN(dateObject)){
         return '';
     };
 
@@ -147,6 +151,7 @@ const formatDueDate = (dateString) => {
 };
 
 
+// Render single task to DOM
 const renderTask = (task) => {
     const priorityClasses = getPriorityColor(task.priority);
     const categoryClasses = getCategoryColor(task.category);
@@ -183,6 +188,7 @@ const renderTask = (task) => {
 // TASK DELETE FUNCTION
 // =========================================================================
 
+// Handle task deletion via event delegation
 taskListEl.addEventListener('click', (event) => {
     const deleteBtn = event.target.closest('[data-action="delete"]');
     if(!deleteBtn) return;
@@ -203,6 +209,7 @@ taskListEl.addEventListener('click', (event) => {
 // EDIT TASK FUNCTION 
 // =========================================================================
 
+// Handle task edit via event delegation
 taskListEl.addEventListener('click', (event) => {
     const editBtn = event.target.closest('[data-action="edit"]');
     if(!editBtn) return;
@@ -214,6 +221,7 @@ taskListEl.addEventListener('click', (event) => {
     const taskToEdit = tasks.find(task => task.id === id);
     if(!taskToEdit) return;
 
+    // Populate form with task data
     titleEl.value = taskToEdit.title;
     descriptionEl.value = taskToEdit.description;
     priorityEl.value = taskToEdit.priority;
@@ -227,9 +235,11 @@ taskListEl.addEventListener('click', (event) => {
 });
 
 
+// Handle form submission for both create and edit
 taskform.addEventListener('submit', (event) => {
     event.preventDefault();
 
+    // Edit existing task
     if(currentTaskToEditId !== null){
        const taskToEdit = tasks.find(task => task.id === currentTaskToEditId);
         if (!taskToEdit) return;
@@ -247,6 +257,7 @@ taskform.addEventListener('submit', (event) => {
         saveTasksToLocalStorage();
         currentTaskToEditId = null;
     }else {
+        // Create new task
         const newTask = createTask();
         tasks.push(newTask);
         renderTask(newTask);
@@ -257,6 +268,7 @@ taskform.addEventListener('submit', (event) => {
 });
 
 
+// Render all tasks and restore completed state
 const renderTasks = () => {
     taskListEl.innerHTML = '';
 
@@ -264,6 +276,7 @@ const renderTasks = () => {
         renderTask(task);
     });
 
+    // Restore completed task styling
     tasks.forEach(task => {
         if(!task.completed) return;
 
@@ -280,10 +293,12 @@ const renderTasks = () => {
 // SAVE LOCAL STORAGE FUNCTIONS
 // =========================================================================
 
+// Save tasks array to localStorage
 const saveTasksToLocalStorage = () => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
+// Load tasks from localStorage
 const loadTasksFromLocalStorage = () => {
     const savedTasks = localStorage.getItem('tasks');
 
@@ -294,6 +309,7 @@ const loadTasksFromLocalStorage = () => {
     return [];
 };
 
+// Initialize tasks on page load
 tasks = loadTasksFromLocalStorage();
 renderTasks();
 nextTaskId = tasks.reduce((max, task) => Math.max(max, task.id), 0) +1;
@@ -303,6 +319,7 @@ nextTaskId = tasks.reduce((max, task) => Math.max(max, task.id), 0) +1;
 // TOGGLE TASK COMPLETION FUNCTION
 // =========================================================================
 
+// Handle task completion toggle via event delegation
 taskListEl.addEventListener('click', (event) => {
     const checkbox = event.target.closest('[data-action="complete"]');
     if(!checkbox) return;
@@ -318,6 +335,7 @@ taskListEl.addEventListener('click', (event) => {
 
     const titleElement = taskEl.querySelector('.font-semibold');
 
+    // Toggle line-through styling
     if(titleElement){
         if(taskCompleted.completed){
             titleElement.classList.add('line-through', 'text-gray-400');
@@ -335,6 +353,7 @@ taskListEl.addEventListener('click', (event) => {
 // COUNTER STATUS FUNCTION
 // =========================================================================
 
+// Update statistics counters
 const updateCounters = () => {
     const total = tasks.length;
     statsTotalEl.textContent = total;
@@ -353,9 +372,11 @@ updateCounters();
 // FILTERING FUNCTIONS
 // =========================================================================
 
+// Apply all filters and render filtered tasks
 const filterAndRenderTasks = () => {
     let filteredTasks = [...tasks];
 
+    // Search filter
     const searchText = searchInput.value;
 
     if(searchText){
@@ -366,6 +387,7 @@ const filterAndRenderTasks = () => {
     });
     }
 
+    // Status filter (completed/pending)
     const statusFilter = filterStatus.value;
 
     if(statusFilter !== "all"){
@@ -378,6 +400,7 @@ const filterAndRenderTasks = () => {
         });
     }
 
+    // Category filter
     const categoryFilter = filterCategory.value;
 
     if(categoryFilter !== "todas"){
@@ -386,6 +409,7 @@ const filterAndRenderTasks = () => {
         });
     }
 
+    // Sort tasks
     const sortValue = sortBy.value;
 
     if(sortValue){
@@ -404,6 +428,7 @@ const filterAndRenderTasks = () => {
         });
     }
 
+    // Render filtered tasks
     taskListEl.innerHTML = '';
     filteredTasks.forEach(task => {
         renderTask(task);
@@ -417,6 +442,7 @@ const filterAndRenderTasks = () => {
 };
 
 
+// Attach filter event listeners
 searchInput.addEventListener('input', filterAndRenderTasks);
 filterStatus.addEventListener('change', filterAndRenderTasks);
 filterCategory.addEventListener('change', filterAndRenderTasks);
@@ -427,6 +453,7 @@ sortBy.addEventListener('change', filterAndRenderTasks);
 // DARK MODE FUNCTION
 // =========================================================================
 
+// Toggle dark mode and save preference
 const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
 
@@ -437,6 +464,7 @@ const toggleDarkMode = () => {
     } 
 };
 
+// Load dark mode preference on page load
 const loadDarkModePreference = () => {
     const themePreference = localStorage.getItem('theme');
 
@@ -454,6 +482,7 @@ darkModeToggle.addEventListener('click', toggleDarkMode);
 // JSON TASK IMPORT AND EXPORT FUNCTION
 // =========================================================================
 
+// Export tasks to JSON file
 const exportTasksToJSON = () => {
     const jsonString = JSON.stringify(tasks, null, 2);
     const blob = new Blob([jsonString], {type: 'application/json'});
@@ -464,9 +493,9 @@ const exportTasksToJSON = () => {
     link.download = 'tarefas.json';
     link.click();
 
+    // Clean up
     setTimeout(() => {
         URL.revokeObjectURL(objectURL);
-
         link.remove();
     }, 100);
 };
@@ -474,6 +503,7 @@ const exportTasksToJSON = () => {
 exportJsonBtn.addEventListener('click', exportTasksToJSON);
 
 
+// Import tasks from JSON file
 const importTasksFromJSON = () => {
     const file = importJsonFile.files[0];
 
@@ -484,12 +514,14 @@ const importTasksFromJSON = () => {
 
     const reader = new FileReader();
 
+    // Handle successful file read
     reader.onload = (event) => {
         const content = event.target.result;
 
         try {
             const importedTasks = JSON.parse(content);
             
+            // Validate imported data
             if(Array.isArray(importedTasks)){
                 tasks = importedTasks;
                 renderTasks();
@@ -508,6 +540,7 @@ const importTasksFromJSON = () => {
         }
     };
 
+    // Handle file read error
     reader.onerror = () => {
         alert('Erro ao ler o arquivo. Tente novamente.');
         console.error('Erro de leitura do arquivo:', reader.error);
