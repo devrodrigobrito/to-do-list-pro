@@ -474,5 +474,46 @@ const exportTasksToJSON = () => {
 exportJsonBtn.addEventListener('click', exportTasksToJSON);
 
 
+const importTasksFromJSON = () => {
+    const file = importJsonFile.files[0];
 
+    if(!file){
+        alert('Selecione um arquivo JSON primeiro!');
+        return;
+    };
 
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+        const content = event.target.result;
+
+        try {
+            const importedTasks = JSON.parse(content);
+            
+            if(Array.isArray(importedTasks)){
+                tasks = importedTasks;
+                renderTasks();
+                updateCounters();
+                saveTasksToLocalStorage();
+
+                importJsonFile.value = '';
+            }else{
+                alert('O conteúdo do arquivo JSON não é um array de tarefas válido.');
+            } 
+
+        } catch (error){
+           alert('Erro ao processar o arquivo. Certifique-se de que é um JSON válido.');
+           importJsonFile.value = '';
+           console.error('Erro de parsing JSON:', error); 
+        }
+    };
+
+    reader.onerror = () => {
+        alert('Erro ao ler o arquivo. Tente novamente.');
+        console.error('Erro de leitura do arquivo:', reader.error);
+    };
+
+    reader.readAsText(file);
+};
+
+importJsonBtn.addEventListener('click', importTasksFromJSON);
