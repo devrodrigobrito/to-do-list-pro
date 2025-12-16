@@ -1,4 +1,4 @@
-# 📝To-Do list Pro
+# 📝To-Do List Pro
 To-Do List Pro é um gerenciador de tarefas moderno e completo, desenvolvido com foco em produtividade e experiência do usuário. O projeto oferece uma interface intuitiva com modo escuro, permitindo que você organize suas tarefas de forma eficiente através de categorias, prioridades e filtros avançados.
 
 ---
@@ -118,6 +118,6 @@ Durante o desenvolvimento deste projeto, foram consolidados os seguintes conheci
 **Rodrigo Brito**
 
 - GitHub: [@devrodrigobrito](https://github.com/devrodrigobrito)
-- LinkedIn: [@devrodrigobrito](www.linkedin.com/in/devrodrigobrito)
+- LinkedIn: www.linkedin.com/in/devrodrigobrito
 - E-mail: rodrigobritocontato@gmail.com
 
